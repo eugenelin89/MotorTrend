@@ -3,8 +3,8 @@ title: "Regression Analysis for Motor Trend"
 author: "Eugene Lin"
 date: '2018-06-26'
 output:
-  word_document: default
   html_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +14,7 @@ data(mtcars)
 df <- mtcars
 df$am <- as.factor(df$am)
 ```
-<span style="color:red">To see the HTML version, please visit:  
+<span style="color:red">To see the HTML version (better!), please visit:  
 http://rpubs.com/eugenelin89/400270  
 For Source Code, please visit:  
 https://github.com/eugenelin89/MotorTrend  
@@ -40,7 +40,8 @@ cor(mtcars)[1,]
 ## Model Selection
 Based on correlations from Exploratory Data Analysis:  
 Pick varables that have absolute correlation higher than 0.6 after rounding to 2 decimal places:
-cyl, disp, hp, drat, wt, vs, am
+cyl, disp, hp, drat, wt, vs, am  
+We also fitted only transmission (am) for comparison.
 
 ```{r fit}
 fit <- lm(mpg ~ am + cyl + disp + hp + drat + wt + vs + am, data = df)
