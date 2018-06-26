@@ -1,0 +1,37 @@
+---
+title: "Regression Analysis for Motor Trend"
+author: "Eugene Lin"
+date: '2018-06-26'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(datasets)
+data(mtcars)
+df <- mtcars
+df$am <- as.factor(df$am)
+```
+
+### Executive Summary
+
+### Exploratory Data Analysis
+
+
+### Model Selection
+
+### Interpreting Coefficients
+
+### Diagnostics
+
+### Conclusion
+#### Is an automatic or manual transmission better for MPG
+
+#### Quantify the MPG difference between qutomatic and manual transmission
+
+#### Uncertainty and Inference
+
+### Appendix
+#### Plots
+
+
