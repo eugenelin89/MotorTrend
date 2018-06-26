@@ -2,7 +2,9 @@
 title: "Regression Analysis for Motor Trend"
 author: "Eugene Lin"
 date: '2018-06-26'
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -12,26 +14,74 @@ data(mtcars)
 df <- mtcars
 df$am <- as.factor(df$am)
 ```
+<span style="color:red">To see the HTML version, please visit:  
+http://rpubs.com/eugenelin89/400270  
+For Source Code, please visit:  
+https://github.com/eugenelin89/MotorTrend  
+</span>
+  
+## Executive Summary
+- The investigation considers the Motor Trend US magazine data set to answer the question if transmission makes a difference in vehicle fuel efficiency. The data was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973–74 models).
+- Our investigation shows that in general, manual transmission out perofrms automatic transmission in fuel efficiency.
+- Other variables also contribute to fuel efficiency, namely: number of cylinders, displacement, gross horsepower, rear axle ratio, weight, and V/S.
 
-### Executive Summary
+## Exploratory Data Analysis
+We first take a quick look at what the data set looks like in general. Then, we do a rough calculation of average fuel consumption for manual and automatic transmission independelty. Finally, we take a look at what variables have high correlation to fuel consumption.
+```{r eda}
+# head(mtcars)
+mean(mtcars$mpg)
+tapply(mtcars$mpg, mtcars$am, summary)
+cor(mtcars)[1,]
+```
+- Mean and Median of manual transmission have better mpg than automatic transmission.
+- Figure 1 in Appendix shows that manual transission has better fuel efficiency in general.
+- Other variables that have high absolute correlation to mpg are: cyl, disp, hp, drat, wt, vs.
 
-### Exploratory Data Analysis
+## Model Selection
+Based on correlations from Exploratory Data Analysis:  
+Pick varables that have absolute correlation higher than 0.6 after rounding to 2 decimal places:
+cyl, disp, hp, drat, wt, vs, am
+
+```{r fit}
+fit <- lm(mpg ~ am + cyl + disp + hp + drat + wt + vs + am, data = df)
+fit_am <- lm(mpg ~ am, data = df)
+summary(fit)
+summary(fit_am)
+```
+
+Based on the interpretation of coefficients summarized below, including cyl, disp, hp, drat, wt, vs, am is a much better model than transmission (am) alone as they explains 86% of variation as opposed to only 36% when fitted with only transmission.
+
+## Interpreting Coefficients
+#### Fitting transmission only:  
+- mpg for automatic is 17.147, for manual is 17.147 + 7.245.  
+- R-Squared is 0.3598, approx 36% of the variance explained by transmission.  
+
+#### Fitting variables with absolute correlations greater than 0.6
+- When fitting with other variables with high absolute correlation, the variables accounts for approx 86% of the variance. 
+- Putting the varables together, mannual transmission contributes to 1.95 mpg increase in fuel efficiency.
 
 
-### Model Selection
+## Diagnostics
+See Fig. 2 in Appendix for diagnostic plots.
+- Residuals vs Fitted plot shows residuals appears to bounce randomly around the 0, suggesting that the fitted relationship is linear.
+- Normal Q-Q plot shows a roughly straight line suggesting normal distribution. 
 
-### Interpreting Coefficients
+## Conclusion
+The better model than considering transmission (am) alone is to also consider the variables cyl, disp, hp, drat, wt, and vs.  
 
-### Diagnostics
+#### Is an automatic or manual transmission better for MPG:
+Manual transmission is better for MPG.
 
-### Conclusion
-#### Is an automatic or manual transmission better for MPG
+#### Quantify the MPG difference between automatic and manual transmission:
+When considered by itself, mannual transmission is on average 7.245 mpg more efficient than automatic transmission. When considered with confounding variables, manual transmission improvement is marginal (1.95mpg) but still better than automatic.
 
-#### Quantify the MPG difference between qutomatic and manual transmission
+#### Uncertainty and Inference:
+The selected model which consists of cyl, disp, hp, drat, wt, vs, and am accounts for 86% of variance. P-Value of 0.000285 suggests significance of the variables contributing to the prediction. 
 
-#### Uncertainty and Inference
+## Appendix  
 
-### Appendix
-#### Plots
-
-
+```{r plots}
+boxplot(mpg ~ am, data = mtcars, ylab='Miles/(US) gallon', xlab='Transmission: 0 - Automatic, 1 - Mannual ', main = 'Fig. 1 - Fuel Efficiency vs Transmission')
+par(mfrow = c(2,2))
+plot(fit, main = "Fig. 2 - Regression Diagnistics")
+```
